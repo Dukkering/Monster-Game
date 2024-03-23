@@ -3,3 +3,10 @@ spring:
       username: monster_game
       password: monster_game
       url: jdbc:mysql://localhost:3306/monster_game
+      
+   jpa:
+      hibernate:
+         ddl-auto: update
+      show-sql: true
+      defer-datasource-initialization: true
+      
