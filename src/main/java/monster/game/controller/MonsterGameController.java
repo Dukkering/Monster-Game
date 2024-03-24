@@ -95,9 +95,30 @@ public class MonsterGameController {
 		return monsterGameService.saveMonster(trainerId, monsterData);
 	}
 	
+	/*
+	 * Gets an existing monster
+	 */
 	@GetMapping("/trainer/{trainderId}/monster/{monsterId}")
 	public MonsterData retrieveMonsterById(@PathVariable Long trainerId, @PathVariable Long monsterId) {
 		log.info("Retrieving monster with ID={} for Trainer with ID={}", monsterId, trainerId);
 		return monsterGameService.retrieveMonsterById(trainerId, monsterId);
 	}
+	
+	/*
+	 * Deletes an existing monster
+	 */
+	@DeleteMapping("/trainer/{trainerId}/monster/{monsterId}")
+	public Map<String, String> deleteMonsterById(@PathVariable Long trainerId, @PathVariable Long monsterId) {
+		log.info("Deleting monster with ID={} for Trainer with ID={}", monsterId, trainerId);
+		monsterGameService.deleteMonsterById(trainerId, monsterId);
+		return Map.of("message", "Deletion of monster with ID=" + 
+		monsterId + " for Trainer ID=" + trainerId + " was successful.");
+	}
+	
+	
+	// Add Post for Skill
+	// Add Put for Skill
+	// Add Delete for Skill
+	
+	// Test all contents for effectiveness
 }

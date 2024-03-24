@@ -96,6 +96,10 @@ public class MonsterGameService {
 		 */
 		Set<Skill> skills = skillDao.findAllBySkillIn(monsterData.getSkills());
 		
+		/*
+		 * Creates the monster Object and sets the fields
+		 */
+		
 		Monster monster = findOrCreateMonster(monsterData.getMonsterId());
 		setMonsterFields (monster, monsterData);
 		
@@ -156,6 +160,19 @@ public class MonsterGameService {
 		}
 		
 		return new MonsterData(monster);
+	}
+
+	@Transactional(readOnly = false)
+	public void deleteMonsterById(Long trainerId, Long monsterId) {
+		findTrainerById(trainerId);
+		Monster monster = findMonsterById(monsterId);
+		
+		if(monster.getTrainer().getTrainerId() != trainerId) {
+			throw new IllegalStateException("Monster with ID=" + monsterId + " is not owned by trainer with ID=" + trainerId);
+		}
+		
+		monsterDao.delete(monster);
+		
 	}
 
 	
