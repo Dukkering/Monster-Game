@@ -28,11 +28,12 @@ public class MonsterData {
 	
 		@Data
 		@NoArgsConstructor
-		static class SkillsResponse {
+		
+		public static class SkillsResponse {
 			private long skillId;
 			private String skill;
 			
-			SkillsResponse(Skill skill) {
+			public SkillsResponse(Skill skill) {
 				skillId = skill.getSkillId();
 				this.skill = skill.getSkill();
 			}

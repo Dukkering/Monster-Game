@@ -14,6 +14,7 @@ import monster.game.controller.model.TrainerData;
 import monster.game.dao.MonsterDao;
 import monster.game.dao.SkillDao;
 import monster.game.dao.TrainerDao;
+import monster.game.entity.Monster;
 import monster.game.entity.Skill;
 import monster.game.entity.Trainer;
 
@@ -94,6 +95,67 @@ public class MonsterGameService {
 		 * Finds all the skills to be associated with a given monster
 		 */
 		Set<Skill> skills = skillDao.findAllBySkillIn(monsterData.getSkills());
+		
+		Monster monster = findOrCreateMonster(monsterData.getMonsterId());
+		setMonsterFields (monster, monsterData);
+		
+		/*
+		 * Sets the Trainer for the monster, and puts the monster in the Trainer's list
+		 * of monsters.
+		 */
+		monster.setTrainer(trainer);
+		trainer.getMonsters().add(monster);
+		
+		for(Skill skill : skills) {
+			skill.getMonsters().add(monster);
+			monster.getSkills().add(skill);
+		}
+		
+		Monster dbMonster = monsterDao.save(monster);
+		return new MonsterData(dbMonster);
+	}
+
+	/*
+	 * Conversion from Monster Data Object to Monster Object
+	 */
+	private void setMonsterFields(Monster monster, MonsterData monsterData) {
+		monster.setName(monsterData.getName());
+		monster.setBreed(monsterData.getBreed());
+		monster.setMonsterId(monsterData.getMonsterId());
+		
+	}
+
+	/*
+	 * Finds or creates a monster; Searches if it's null, creates it if it is, else
+	 * pulls it by the ID.
+	 */
+	private Monster findOrCreateMonster(Long monsterId) {
+		Monster monster;
+		
+		if(Objects.isNull(monsterId)) {
+			monster = new Monster();
+		} else {
+			monster = findMonsterById(monsterId);
+		}
+		return monster;
+	}
+
+	private Monster findMonsterById(Long monsterId) {
+		return monsterDao.findById(monsterId).
+				orElseThrow(() -> new NoSuchElementException
+						("Monster with ID=" + monsterId+ " does not exist."));
+	}
+
+	@Transactional(readOnly = true)
+	public MonsterData retrieveMonsterById(Long trainerId, Long monsterId) {
+		findTrainerById(trainerId);
+		Monster monster = findMonsterById(monsterId);
+		
+		if(monster.getTrainer().getTrainerId() != trainerId) {
+			throw new IllegalStateException("Monster with ID=" + monsterId + " is not owned by trainer with ID=" + trainerId);
+		}
+		
+		return new MonsterData(monster);
 	}
 
 	

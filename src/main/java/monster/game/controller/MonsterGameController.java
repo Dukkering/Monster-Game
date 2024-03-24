@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,7 +36,7 @@ public class MonsterGameController {
 		log.info("Creating new Trainer {}", trainerData);
 		return monsterGameService.saveTrainer(trainerData);
 	}
-	
+
 	/*
 	 * Retrieves all Trainers
 	 */
@@ -44,7 +45,7 @@ public class MonsterGameController {
 		log.info("Retrieve all Trainers");
 		return monsterGameService.retrieveAllTrainers();
 	}
-	
+
 	/*
 	 * Retrieves a specific Trainer by ID
 	 */
@@ -53,7 +54,7 @@ public class MonsterGameController {
 		log.info("Retrieving Trainer with ID={}", trainerId);
 		return monsterGameService.retrieveTrainerById(trainerId);
 	}
-	
+
 	/*
 	 * Catches and prevents any attempts to delete all Trainers
 	 */
@@ -62,18 +63,17 @@ public class MonsterGameController {
 		log.info("Attempting to delete all Trainers.");
 		throw new UnsupportedOperationException("Deleting all contributors is not allowed.");
 	}
-	
+
 	/*
 	 * Deletes a specific Trainer by the specified ID
 	 */
 	@DeleteMapping("/trainer/{trainerId}")
-	public Map<String, String> deleteTrainerById(@PathVariable Long trainerId){
+	public Map<String, String> deleteTrainerById(@PathVariable Long trainerId) {
 		log.info("Deleting Trainer with an ID={}", trainerId);
 		monsterGameService.deleteTrainerById(trainerId);
-		return Map.of("message", "Deletion of Trainer with ID=" 
-		+ trainerId+ " was successful.");
+		return Map.of("message", "Deletion of Trainer with ID=" + trainerId + " was successful.");
 	}
-	
+
 	/*
 	 * Creates a monster, tied to a specific trainer
 	 */
@@ -83,36 +83,21 @@ public class MonsterGameController {
 		log.info("Creating Monster {} for Trainer with ID={}", monsterData, trainerId);
 		return monsterGameService.saveMonster(trainerId, monsterData);
 	}
+
+	/*
+	 * Modifies an existing monster
+	 */
+	@PutMapping("/trainer/{trainerId}/monster/{monsterId}")
+	public MonsterData updateMonster(@PathVariable Long trainerId, @PathVariable Long monsterId,
+			@RequestBody MonsterData monsterData) {
+		monsterData.setMonsterId(monsterId);
+		log.info("Updating monster {} for Trainer with ID={}", monsterData, trainerId);
+		return monsterGameService.saveMonster(trainerId, monsterData);
+	}
+	
+	@GetMapping("/trainer/{trainderId}/monster/{monsterId}")
+	public MonsterData retrieveMonsterById(@PathVariable Long trainerId, @PathVariable Long monsterId) {
+		log.info("Retrieving monster with ID={} for Trainer with ID={}", monsterId, trainerId);
+		return monsterGameService.retrieveMonsterById(trainerId, monsterId);
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
