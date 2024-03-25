@@ -24,10 +24,7 @@ public class Trainer {
 
 	private String trainerName;
 
-	/*
-	 * There is One Trainer to many Monsters, which are kept in a set. If the
-	 * trainer is removed, all associated monsters should also be removed.
-	 */
+	
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)

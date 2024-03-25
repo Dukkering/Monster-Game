@@ -1,0 +1,46 @@
+
+
+Trainer POST
+	http://localhost:8080/monster_game/trainer
+
+	{
+	"trainerName": "TrainerNameHere"
+	}
+	
+	
+Trainer GET
+	http://localhost:8080/monster_game/trainer
+	
+	
+	
+Monster POST
+	http://localhost:8080/monster_game/trainer/{TrainerId}/monster
+	
+	{
+	"name": "MonsterNameHere",
+	"breed": "MonsterBreedHere"
+	}
+	
+
+Monster PUT
+		http://localhost:8080/monster_game/trainer/{TrainerId}/monster/{MonsterId}
+	
+	{
+	"name": "MonsterNameHere",
+	"breed": "MonsterBreedHere"
+	}
+	
+	
+Monster GET
+		http://localhost:8080/monster_game/trainer/{TrainerId}/monster/{MonsterId}
+		
+Monster DELETE
+		http://localhost:8080/monster_game/trainer/{TrainerId}/monster/{MonsterId}
+		
+Skill POST
+		http://localhost:8080/monster_game/trainer/{TrainerId}/monster/{MonsterId}/skill
+		
+		"skillName": "SkillNameHere"
+		
+Skill DELETE
+		http://localhost:8080/monster_game/trainer/{TrainerId}/monster/{MonsterId}/skill/{SkillId}

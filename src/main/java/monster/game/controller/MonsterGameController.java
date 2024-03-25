@@ -62,7 +62,7 @@ public class MonsterGameController {
 	@DeleteMapping("/trainer/")
 	public void deleteAllTrainers() {
 		log.info("Attempting to delete all Trainers.");
-		throw new UnsupportedOperationException("Deleting all contributors is not allowed.");
+		throw new UnsupportedOperationException("Deleting all Trainers is not allowed.");
 	}
 
 	/*
@@ -84,6 +84,15 @@ public class MonsterGameController {
 		log.info("Creating Monster {} for Trainer with ID={}", monsterData, trainerId);
 		return monsterGameService.saveMonster(trainerId, monsterData);
 	}
+	
+	/*
+	 * Retrieves all Monsters for a specific trainer
+	 */
+	@GetMapping("/trainer/{trainerId}/monster")
+	public List<MonsterData> retrieveAllMonsters() {
+		log.info("Retrieve all Trainers");
+		return monsterGameService.retrieveAllMonsters();
+	}
 
 	/*
 	 * Modifies an existing monster
@@ -99,7 +108,7 @@ public class MonsterGameController {
 	/*
 	 * Gets an existing monster
 	 */
-	@GetMapping("/trainer/{trainderId}/monster/{monsterId}")
+	@GetMapping("/trainer/{trainerId}/monster/{monsterId}")
 	public MonsterData retrieveMonsterById(@PathVariable Long trainerId, @PathVariable Long monsterId) {
 		log.info("Retrieving monster with ID={} for Trainer with ID={}", monsterId, trainerId);
 		return monsterGameService.retrieveMonsterById(trainerId, monsterId);
@@ -114,6 +123,15 @@ public class MonsterGameController {
 		monsterGameService.deleteMonsterById(trainerId, monsterId);
 		return Map.of("message", "Deletion of monster with ID=" + 
 		monsterId + " for Trainer ID=" + trainerId + " was successful.");
+	}
+	
+	/*
+	 * Catches and prevents any attempts to delete all Monsters
+	 */
+	@DeleteMapping("/trainer/{trainerId}/monster")
+	public void deleteAllMonsters() {
+		log.info("Attempting to delete all Monsters for a given Trainer.");
+		throw new UnsupportedOperationException("Deleting all Monsters is not allowed.");
 	}
 	
 	/*
@@ -137,7 +155,15 @@ public class MonsterGameController {
 		return Map.of("message", "Deletion of Skill ID=" + skillId + " was successful.");
 	}
 	
-	// Test all contents for effectiveness
+	/*
+	 * Blocks attempts to delete all skills
+	 */
+	@DeleteMapping("/trainer/{trainerId}/monster/{monsterId}/skill")
+	public void deleteAllSkills() {
+		log.info("Attempting to delete all Skills for a given Monster.");
+		throw new UnsupportedOperationException("Deleting all Skills is not allowed.");
+	}
+	
 
 
 }

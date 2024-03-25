@@ -28,22 +28,19 @@ public class Monster {
 	private String name;
 	private String breed;
 
-	/*
-	 * There can be many monsters to one trainer. A monster MUST have a trainer.
-	 */
+
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "trainer_id", nullable = false)
 	private Trainer trainer;
 
-	/*
-	 * Many different monsters can have many skills
-	 */
+	
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "monster_skill", joinColumns = @JoinColumn(name = "monster_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
+	@ManyToMany(cascade = CascadeType.REMOVE)
+	@JoinTable(name = "monster_skill", joinColumns = @JoinColumn(name = "monster_id"), 
+		inverseJoinColumns = @JoinColumn(name = "skill_id"))
 
 	private Set<Skill> skills = new HashSet<>();
 }

@@ -3,7 +3,6 @@ package monster.game.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,15 +92,11 @@ public class MonsterGameService {
 		Trainer trainer = findTrainerById(trainerId);
 
 		/*
-		 * Finds all the skills to be associated with a given monster
-		 */
-		Set<Skill> skills = skillDao.findAllBySkillId(monsterData.getSkills());
-
-		/*
 		 * Creates the monster Object and sets the fields
 		 */
-
 		Monster monster = findOrCreateMonster(monsterData.getMonsterId());
+		
+		
 		setMonsterFields(monster, monsterData);
 
 		/*
@@ -111,10 +106,6 @@ public class MonsterGameService {
 		monster.setTrainer(trainer);
 		trainer.getMonsters().add(monster);
 
-		for (Skill skill : skills) {
-			skill.getMonsters().add(monster);
-			monster.getSkills().add(skill);
-		}
 
 		Monster dbMonster = monsterDao.save(monster);
 		return new MonsterData(dbMonster);
@@ -223,8 +214,20 @@ public class MonsterGameService {
 		
 		skillDao.delete(skill);
 	}
+
+	@Transactional(readOnly = true)
+	public List<MonsterData> retrieveAllMonsters() {
+
+			//@formatter:off
+			return monsterDao.findAll()
+			.stream()
+			.map(cont -> new MonsterData(cont))
+			.toList();
+			//@formatter:on
+		}
+	}
 	
 
 
 
-}
+

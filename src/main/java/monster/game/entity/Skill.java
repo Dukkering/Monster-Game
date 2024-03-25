@@ -22,10 +22,7 @@ public class Skill {
 	private Long skillId;
 	private String skillName;
 
-	/*
-	 * Each of many skills can belong to many monsters. Monsters should persist if
-	 * skills are deleted, and skills should persist if monsters are deleted.
-	 */
+
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	@ManyToMany(mappedBy = "skills", cascade = CascadeType.PERSIST)
