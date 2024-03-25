@@ -10,6 +10,6 @@ import monster.game.entity.Monster;
 
 public interface MonsterDao extends JpaRepository<Monster, Long> {
 
-	Set<Monster> findAllByMonsterIn(Set<SkillData.MonstersResponse> monsters);
+	Set<Monster> findAllByMonsterId(Long monsterId);
 	
 }

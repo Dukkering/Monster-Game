@@ -95,7 +95,7 @@ public class MonsterGameService {
 		/*
 		 * Finds all the skills to be associated with a given monster
 		 */
-		Set<Skill> skills = skillDao.findAllBySkillIn(monsterData.getSkills());
+		Set<Skill> skills = skillDao.findAllBySkillId(monsterData.getSkills());
 
 		/*
 		 * Creates the monster Object and sets the fields
