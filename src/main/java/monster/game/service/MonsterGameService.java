@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import monster.game.controller.model.MonsterData;
+import monster.game.controller.model.SkillData;
 import monster.game.controller.model.TrainerData;
 import monster.game.dao.MonsterDao;
 import monster.game.dao.SkillDao;
@@ -90,31 +91,31 @@ public class MonsterGameService {
 		 * Defines the Trainer
 		 */
 		Trainer trainer = findTrainerById(trainerId);
-		
+
 		/*
 		 * Finds all the skills to be associated with a given monster
 		 */
 		Set<Skill> skills = skillDao.findAllBySkillIn(monsterData.getSkills());
-		
+
 		/*
 		 * Creates the monster Object and sets the fields
 		 */
-		
+
 		Monster monster = findOrCreateMonster(monsterData.getMonsterId());
-		setMonsterFields (monster, monsterData);
-		
+		setMonsterFields(monster, monsterData);
+
 		/*
 		 * Sets the Trainer for the monster, and puts the monster in the Trainer's list
 		 * of monsters.
 		 */
 		monster.setTrainer(trainer);
 		trainer.getMonsters().add(monster);
-		
-		for(Skill skill : skills) {
+
+		for (Skill skill : skills) {
 			skill.getMonsters().add(monster);
 			monster.getSkills().add(skill);
 		}
-		
+
 		Monster dbMonster = monsterDao.save(monster);
 		return new MonsterData(dbMonster);
 	}
@@ -126,7 +127,7 @@ public class MonsterGameService {
 		monster.setName(monsterData.getName());
 		monster.setBreed(monsterData.getBreed());
 		monster.setMonsterId(monsterData.getMonsterId());
-		
+
 	}
 
 	/*
@@ -135,8 +136,8 @@ public class MonsterGameService {
 	 */
 	private Monster findOrCreateMonster(Long monsterId) {
 		Monster monster;
-		
-		if(Objects.isNull(monsterId)) {
+
+		if (Objects.isNull(monsterId)) {
 			monster = new Monster();
 		} else {
 			monster = findMonsterById(monsterId);
@@ -145,20 +146,20 @@ public class MonsterGameService {
 	}
 
 	private Monster findMonsterById(Long monsterId) {
-		return monsterDao.findById(monsterId).
-				orElseThrow(() -> new NoSuchElementException
-						("Monster with ID=" + monsterId+ " does not exist."));
+		return monsterDao.findById(monsterId)
+				.orElseThrow(() -> new NoSuchElementException("Monster with ID=" + monsterId + " does not exist."));
 	}
 
 	@Transactional(readOnly = true)
 	public MonsterData retrieveMonsterById(Long trainerId, Long monsterId) {
 		findTrainerById(trainerId);
 		Monster monster = findMonsterById(monsterId);
-		
-		if(monster.getTrainer().getTrainerId() != trainerId) {
-			throw new IllegalStateException("Monster with ID=" + monsterId + " is not owned by trainer with ID=" + trainerId);
+
+		if (monster.getTrainer().getTrainerId() != trainerId) {
+			throw new IllegalStateException(
+					"Monster with ID=" + monsterId + " is not owned by trainer with ID=" + trainerId);
 		}
-		
+
 		return new MonsterData(monster);
 	}
 
@@ -166,14 +167,64 @@ public class MonsterGameService {
 	public void deleteMonsterById(Long trainerId, Long monsterId) {
 		findTrainerById(trainerId);
 		Monster monster = findMonsterById(monsterId);
-		
-		if(monster.getTrainer().getTrainerId() != trainerId) {
-			throw new IllegalStateException("Monster with ID=" + monsterId + " is not owned by trainer with ID=" + trainerId);
+
+		if (monster.getTrainer().getTrainerId() != trainerId) {
+			throw new IllegalStateException(
+					"Monster with ID=" + monsterId + " is not owned by trainer with ID=" + trainerId);
 		}
-		
+
 		monsterDao.delete(monster);
-		
+
 	}
 
+	@Transactional(readOnly = false)
+	public SkillData saveSkill(Long trainerId, Long monsterId, SkillData skillData) {
+		Monster monster = findMonsterById(monsterId);
+		
+		Skill skill = findOrCreateSkill(monsterId, skillData.getSkillId());
+		
+		setSkillFields(skill, skillData);
+		
+		
+		skill.getMonsters().add(monster);
+		monster.getSkills().add(skill);
+		
+		Skill dbSkill = skillDao.save(skill);
+		
+		return new SkillData(dbSkill);
+
+	}
 	
+	private Skill findOrCreateSkill(Long monsterId, Long skillId) {
+		Skill skill;
+
+		if (Objects.isNull(skillId)) {
+			skill = new Skill();
+		} else {
+			skill = findSkillById(monsterId, skillId);
+		}
+		return skill;
+	}
+
+	private Skill findSkillById(Long monsterId, Long skillId) {
+	return skillDao.findById(skillId).orElseThrow(() -> new NoSuchElementException(
+			"Skill with ID=" + skillId + " is not known by monster ID=" + monsterId + "."));
+	}
+
+	private void setSkillFields(Skill skill, SkillData skillData) {
+		skill.setSkillId(skillData.getSkillId());
+		skill.setSkillName(skillData.getSkillName());	
+	}
+
+	public void deleteSkillById(Long trainerId, Long monsterId, Long skillId) {
+		findTrainerById(trainerId);
+		findMonsterById(monsterId);
+		Skill skill = findSkillById(monsterId, skillId);
+		
+		skillDao.delete(skill);
+	}
+	
+
+
+
 }

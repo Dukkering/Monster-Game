@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 import monster.game.controller.model.MonsterData;
+import monster.game.controller.model.SkillData;
 import monster.game.controller.model.TrainerData;
 import monster.game.service.MonsterGameService;
 
@@ -115,10 +116,28 @@ public class MonsterGameController {
 		monsterId + " for Trainer ID=" + trainerId + " was successful.");
 	}
 	
+	/*
+	 * Creates a skill, tied to a monster, who is tied to a specific trainer
+	 */
 	
-	// Add Post for Skill
-	// Add Put for Skill
-	// Add Delete for Skill
+	@PostMapping("/trainer/{trainerId}/monster/{monsterId}/skill")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public SkillData insertSkill(@PathVariable Long trainerId, @PathVariable Long monsterId, @RequestBody SkillData skillData) {
+		log.info("Creating Skill {} for Monster {} under trainer {}", skillData, monsterId, trainerId);
+		return monsterGameService.saveSkill(trainerId, monsterId, skillData);
+	}
+	
+	/*
+	 * Deletes a skill
+	 */
+	@DeleteMapping("/trainer/{trainerId}/monster/{monsterId}/skill/{skillId}")
+	public Map<String, String> deleteSkillById(@PathVariable Long trainerId, @PathVariable Long monsterId, @PathVariable Long skillId) {
+		log.info("Deleting skill with ID={} for monster ID={} under Trainer ID={}", skillId, monsterId, trainerId);
+		monsterGameService.deleteSkillById(trainerId, monsterId, skillId);
+		return Map.of("message", "Deletion of Skill ID=" + skillId + " was successful.");
+	}
 	
 	// Test all contents for effectiveness
+
+
 }

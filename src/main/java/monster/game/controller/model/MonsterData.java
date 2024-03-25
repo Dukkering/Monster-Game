@@ -31,11 +31,11 @@ public class MonsterData {
 		
 		public static class SkillsResponse {
 			private long skillId;
-			private String skill;
+			private String skillName;
 			
 			public SkillsResponse(Skill skill) {
 				skillId = skill.getSkillId();
-				this.skill = skill.getSkill();
+				this.skillName = skill.getSkillName();
 			}
 		}
 }

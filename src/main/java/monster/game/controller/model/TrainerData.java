@@ -42,7 +42,7 @@ public class TrainerData {
 			breed = monster.getBreed();
 			
 			for(Skill skill : monster.getSkills()) {
-				skills.add(skill.getSkill());
+				skills.add(skill.getSkillName());
 			}
 			
 			

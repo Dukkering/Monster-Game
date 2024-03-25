@@ -21,7 +21,7 @@ public class Skill {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long skillId;
 
-	private String skill;
+	private String skillName;
 
 	/*
 	 * Each of many skills can belong to many monsters. Monsters should persist if
